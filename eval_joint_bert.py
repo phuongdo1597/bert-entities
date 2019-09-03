@@ -56,6 +56,8 @@ def get_results(input_ids, input_mask, segment_ids, valid_positions, sequence_le
     predicted_tags, predicted_intents = model.predict_slots_intent(
             [input_ids, input_mask, segment_ids, valid_positions], 
             tags_vectorizer, intents_label_encoder, remove_start_end=True)
+	print('predicted tag:', predicted_tags)
+	print('predicted intents:', predicted_intents)
     gold_tags = [x.split() for x in tags_arr]
     #print(metrics.classification_report(flatten(gold_tags), flatten(predicted_tags), digits=3))
     f1_score = metrics.f1_score(flatten(gold_tags), flatten(predicted_tags), average='micro')
