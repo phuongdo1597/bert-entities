@@ -50,14 +50,14 @@ model = JointBertModel.load(load_folder_path, sess)
 
 data_text_arr, data_tags_arr, data_intents = Reader.read(data_folder_path)
 data_input_ids, data_input_mask, data_segment_ids, data_valid_positions, data_sequence_lengths = bert_vectorizer.transform(data_text_arr)
-
+print(data_text_arr)
 def get_results(input_ids, input_mask, segment_ids, valid_positions, sequence_lengths, tags_arr, 
                 intents, tags_vectorizer, intents_label_encoder):
     predicted_tags, predicted_intents = model.predict_slots_intent(
             [input_ids, input_mask, segment_ids, valid_positions], 
             tags_vectorizer, intents_label_encoder, remove_start_end=True)
-	print('predicted tag:', predicted_tags)
-	print('predicted intents:', predicted_intents)
+    print('predicted tag:',predicted_tags)
+    print('predicted intents:',predicted_intents)
     gold_tags = [x.split() for x in tags_arr]
     #print(metrics.classification_report(flatten(gold_tags), flatten(predicted_tags), digits=3))
     f1_score = metrics.f1_score(flatten(gold_tags), flatten(predicted_tags), average='micro')

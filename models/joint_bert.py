@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 """
 @author: mwahdan
 """
@@ -12,6 +13,7 @@ from layers.bert_layer import BertLayer
 import numpy as np
 import os
 import json
+import matplotlib.pyplot as plt
 
 
 class JointBertModel(NLUModel):
@@ -46,7 +48,7 @@ class JointBertModel(NLUModel):
         loss_weights = {'slots_tagger': 3.0, 'intent_classifier': 1.0}
         metrics = {'intent_classifier': 'acc'}
         self.model.compile(optimizer=optimizer, loss=losses, loss_weights=loss_weights, metrics=metrics)
-        self.model.summary()
+        #self.model.summary()
         
 
     def build_model(self):
@@ -79,10 +81,23 @@ class JointBertModel(NLUModel):
         
         history = self.model.fit(X, Y, validation_data=validation_data, 
                                  epochs=epochs, batch_size=batch_size)
-        self.visualize_metric(history.history, 'slots_tagger_loss')
-        self.visualize_metric(history.history, 'intent_classifier_loss')
-        self.visualize_metric(history.history, 'loss')
-        self.visualize_metric(history.history, 'intent_classifier_acc')
+        N = epochs
+        plt.style.use("ggplot")
+        plt.figure()
+        plt.plot(np.arange(0, N), history.history["slots_tagger_loss"], label="slots_tagger_loss")
+        plt.plot(np.arange(0, N), history.history["intent_classifier_loss"], label="intent_classifier_loss")
+        plt.plot(np.arange(0, N), history.history["loss"], label="loss")
+        plt.plot(np.arange(0, N), history.history["intent_classifier_acc"], label="intent_classifier_acc")
+        plt.title("Training Loss and Accuracy")
+        plt.xlabel("Epoch #")
+        plt.ylabel("Loss/Accuracy")
+        plt.legend()
+        plt.show()
+
+        #self.visualize_metric(history.history, 'slots_tagger_loss')
+        #self.visualize_metric(history.history, 'intent_classifier_loss')
+        #self.visualize_metric(history.history, 'loss')
+        #self.visualize_metric(history.history, 'intent_classifier_acc')
         
     def prepare_valid_positions(self, in_valid_positions):
         in_valid_positions = np.expand_dims(in_valid_positions, axis=2)

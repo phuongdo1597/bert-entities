@@ -14,6 +14,7 @@ import numpy as np
 import os
 import pickle
 import tensorflow as tf
+import matplotlib.pyplot as plt
 
 
 # read command-line parameters
@@ -63,9 +64,10 @@ intents_num = len(intents_label_encoder.classes_)
 
 model = JointBertModel(slots_num, intents_num, sess, num_bert_fine_tune_layers=10)
 
-model.fit([train_input_ids, train_input_mask, train_segment_ids, train_valid_positions], [train_tags, train_intents],
+h = model.fit([train_input_ids, train_input_mask, train_segment_ids, train_valid_positions], [train_tags, train_intents],
           validation_data=([val_input_ids, val_input_mask, val_segment_ids, val_valid_positions], [val_tags, val_intents]),
           epochs=epochs, batch_size=batch_size)
+
 
 
 ### saving
